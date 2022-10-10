@@ -1,4 +1,5 @@
 苹果官方文档：https://developer.apple.com/documentation/metal/
+    主要看开发工具下的调试工具和性能调优
 部分文档有中文版：https://developer.apple.com/cn/documentation/
 由于我主要是Unity的使用者 学习Metal主要是将知识点和Unity进行对接
 
@@ -41,3 +42,18 @@ Memory：内存
     Textures：纹理
     Buffers：
     Other：
+# 查看DrawCall
+通过添加lable来管理当前关注的渲染任务 这类似于Unity的CommandBuffer性能打点
+点击drawPrimitives任务查看光栅化后的几何体 这类似于RenderDoc的MeshViewer
+# Geometry Viewer和Shader Debugger
+在DrawCall信息中点击Geometry项查看 可查看顶点信息
+选中一个顶点后 点击Debug可调试顶点shader
+    这个功能是Unity里没有的 类似于C#的逐行调试
+    可以用于判断错误来源于输入数据还是shader代码
+选中一个像素后 点击Debug按钮可调试片元shader
+# 在真机非调试环境生成截帧数据
+    Capture GPU Traces Without Xcode
+    但是输出的文件需要匹配的真机运行？
+https://developer.apple.com/videos/play/wwdc2019/606/
+
+https://developer.apple.com/documentation/metal/debugging_tools/improving_memory_and_resource_usage
