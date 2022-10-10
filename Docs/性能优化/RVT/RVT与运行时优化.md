@@ -1,6 +1,11 @@
+参考资料：
+https://blog.csdn.net/u013412391/article/details/119978683
+https://zhuanlan.zhihu.com/p/306169047
+
 # 地形系统痛点
 1.地形非常大时贴图2048分辨率变得不够用
     通常可以将地形切割成tile 就能继续用1024分辨率了
+    地形大到这种程度的项目一般都是大世界MMO或者SLG了
 2.多层Layer混合 采样次数非常多
     为了避免采样次数过多 通常会尽可能用更少的Layer
     比如有4层Layer 粗糙度放在BaseMap的A通道 再加上法线贴图 LightMap
