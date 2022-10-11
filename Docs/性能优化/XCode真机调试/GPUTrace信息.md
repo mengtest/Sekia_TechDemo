@@ -94,7 +94,10 @@ Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader
 如果单个DrawCall耗时400微秒 那么同负载的DrawCall承载上限是
     33333 / 400 = 83个 
     这只是一个粗略的评估DrawCall承载上限 实际很多
+相同内容的多个DrawCall在同一帧中的耗时偏差上下10%左右 
 
 比如Sample2的两次采样耗时93.4微秒 分别占比24.46%和9.04%
+    第二次采样耗时明显偏少 耗时构成只有Memory Sample
+    第一次采样还有ALU Input Interpolation和ALU Boolean
 
 # 性能积分
