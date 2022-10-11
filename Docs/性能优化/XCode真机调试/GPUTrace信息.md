@@ -32,6 +32,10 @@ MTLStorageMode.memoryless：用于存储临时texture资源 可用于节省带�
     在render pass的开始 texture未被加载
     在render pass的结束 texture未被保存
 
+# XCode调试相关设置
+    选中Target(Unity-iPhone)-Edit Scheme-Run-Diagnostics
+        开启API Validation/Shader Validation/Show Graphics Overview
+        开启后可在手机屏幕右上角和XCode性能分析中看到FPS/CPU/GPU等总览
 # Captured GPU Workload
 截帧成功后得到的调试信息，相当于RenderDoc的.rdc文件
 右侧有最终渲染画面 鼠标放在像素上可显示颜色值
