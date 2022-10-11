@@ -27,6 +27,10 @@ MTKView：类似于SRP，对渲染流程进行包装
 MTLRenderPassDescriptor：描述渲染目标(RT) load和store行为
 renderEncoder drawPrimitives：相当于Unity中的cmd.DrawMesh
 MTLRenderPipelineDescriptor：描述光栅shader的一次DrawCall 用于创建PSO
+MTLStorageMode.memoryless：用于存储临时texture资源 可用于节省带宽
+    texture资源作为render target
+    在render pass的开始 texture未被加载
+    在render pass的结束 texture未被保存
 
 # Captured GPU Workload
 截帧成功后得到的调试信息，相当于RenderDoc的.rdc文件
@@ -62,7 +66,7 @@ Memory：内存
 在Group by Pipeline State模式下根据GPU Time排序DrawCall
     DrawCall、方法、代码行 都会有性能分析帮助定位性能热点
     以代码行为优化着手点-代码行的性能分析饼图提供性能指标
-        ALU：逻辑计算耗时
+        ALU：逻辑计算耗时 积热指标
             使用half精度或避免使用复杂指令 节约ALU
         Memory：buffer或texture的访问延迟
             可通过改变分辨率调整延迟
@@ -71,6 +75,26 @@ Memory：内存
 # 在真机非调试环境生成截帧数据
     Capture GPU Traces Without Xcode
     但是输出的文件需要匹配的真机运行？
+# 进阶学习资源
+WWDC：Delivering Optimized Metal Apps and Games
+    Optimizing performance, memory, and bandwidth
 https://developer.apple.com/videos/play/wwdc2019/606/
 
-https://developer.apple.com/documentation/metal/debugging_tools/improving_memory_and_resource_usage
+# 性能拆解
+如果要通过抓帧评估性能指标 那么就必须详细了解XCode中各项参数的意义
+为了方便测试 这里定制了很多测试用shader和对应的测试环境
+Sample1是简单透明混合 + 采样1次的shader
+Sample2是简单透明混合 + 采样2次后相乘的shader
+Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader
+因为都是全屏透明材质 所以OverDraw都是实打实的 片元计算比重非常大
+
+耗时概念
+在XCode中显示的GPU Time默认为同类计算的总时间
+以下时间单位都用微秒来算 如果要达到30帧 那么每一帧耗时是33333微秒
+如果单个DrawCall耗时400微秒 那么同负载的DrawCall承载上限是
+    33333 / 400 = 83个 
+    这只是一个粗略的评估DrawCall承载上限 实际很多
+
+比如Sample2的两次采样耗时93.4微秒 分别占比24.46%和9.04%
+
+# 性能积分
