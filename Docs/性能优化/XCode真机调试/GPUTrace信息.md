@@ -96,12 +96,15 @@ Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader
 在XCode中显示的GPU Time默认为同类计算的总时间
 以下时间单位都用微秒来算 如果要达到30帧 那么每一帧耗时是33333微秒
 如果单个DrawCall耗时400微秒 那么同负载的DrawCall承载上限是
-    33333 / 400 = 83个 
-    这只是一个粗略的评估DrawCall承载上限 实际很多
+    33333 / 400 = 83个
 相同内容的多个DrawCall在同一帧中的耗时偏差上下10%左右 
 
 比如Sample2的两次采样耗时93.4微秒 分别占比24.46%和9.04%
     第二次采样耗时明显偏少 耗时构成只有Memory Sample
     第一次采样还有ALU Input Interpolation和ALU Boolean
+        使用Point和LOD 0采样后没了ALU Boolean
+        输入差值可能是顶点数据到片元数据的差值
+    ALU half：half精度的浮点运算
+    Memory Load/Store：Blend操作需要Load和Store
 
 # 性能积分
