@@ -50,7 +50,24 @@ Memory：内存
 选中一个顶点后 点击Debug可调试顶点shader
     这个功能是Unity里没有的 类似于C#的逐行调试
     可以用于判断错误来源于输入数据还是shader代码
+    展开调试信息后获得更多调试信息
+    可观察一个变量的数值的变化过程
 选中一个像素后 点击Debug按钮可调试片元shader
+# Memory Viewer
+寻找资源分配中可以优化的点
+易失性/非易失性 私有的/共享的 未使用的 未绑定的 绑定了但是无GPU访问的
+# 帧性能分析
+渲染命令支持有两种排序方式 在旧的XCode版本排序方式名称有差别
+在Group by API Call模式下检查管线流程和渲染逻辑
+在Group by Pipeline State模式下根据GPU Time排序DrawCall
+    DrawCall、方法、代码行 都会有性能分析帮助定位性能热点
+    以代码行为优化着手点-代码行的性能分析饼图提供性能指标
+        ALU：逻辑计算耗时
+            使用half精度或避免使用复杂指令 节约ALU
+        Memory：buffer或texture的访问延迟
+            可通过改变分辨率调整延迟
+        Control flow：逻辑分支耗时
+        Synchronization：同步延迟 异步计算中需要等待同步
 # 在真机非调试环境生成截帧数据
     Capture GPU Traces Without Xcode
     但是输出的文件需要匹配的真机运行？
