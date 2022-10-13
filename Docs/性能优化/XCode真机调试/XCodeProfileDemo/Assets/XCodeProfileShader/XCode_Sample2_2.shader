@@ -4,6 +4,8 @@ Shader "XCode/Sample2_2"
 	{
 		_BaseMap("BaseMap", 2D) = "white" {}
 		_BaseMap2("BaseMap2", 2D) = "white" {}
+		_BaseMap3("BaseMap3", 2D) = "white" {}
+		_BaseMap4("BaseMap4", 2D) = "white" {}
 	}
 
 	SubShader
@@ -29,6 +31,8 @@ Shader "XCode/Sample2_2"
 			CBUFFER_END
 			TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
 			TEXTURE2D(_BaseMap2); SAMPLER(sampler_BaseMap2);
+			TEXTURE2D(_BaseMap3); SAMPLER(sampler_BaseMap3);
+			TEXTURE2D(_BaseMap4); SAMPLER(sampler_BaseMap4);
 
 			struct a2v
 			{
@@ -55,8 +59,10 @@ Shader "XCode/Sample2_2"
 			half4 frag ( v2f i  ) : SV_Target
 			{
 				float2 UV_0 = i.uv0.xy;
-				half4 _BaseMapValue = SAMPLE_TEXTURE2D_LOD(_BaseMap, sampler_BaseMap, UV_0, 0.0);
-				_BaseMapValue *= SAMPLE_TEXTURE2D_LOD(_BaseMap2, sampler_BaseMap2, UV_0, 0.0);
+				half4 _BaseMapValue = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, UV_0);
+				_BaseMapValue *= SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, UV_0);
+				_BaseMapValue *= SAMPLE_TEXTURE2D(_BaseMap3, sampler_BaseMap3, UV_0);
+				_BaseMapValue *= SAMPLE_TEXTURE2D(_BaseMap4, sampler_BaseMap4, UV_0);
 				half3 _Color = _BaseMapValue.rgb; 
 				half _Alpha = _BaseMapValue.a;
 				return half4(_Color, _Alpha);

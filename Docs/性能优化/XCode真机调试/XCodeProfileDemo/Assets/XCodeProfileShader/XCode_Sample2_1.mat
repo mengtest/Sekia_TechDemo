@@ -28,6 +28,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 79a6a122528e7b34b85940568c3d180b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _BaseMap3:
+        m_Texture: {fileID: 2800000, guid: f864f8bbd6973c94984f99982227216e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats: []
     m_Colors: []
