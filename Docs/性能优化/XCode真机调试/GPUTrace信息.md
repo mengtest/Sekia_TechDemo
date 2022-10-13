@@ -87,6 +87,7 @@ https://developer.apple.com/videos/play/wwdc2019/606/
 # 性能拆解
 如果要通过抓帧评估性能指标 那么就必须详细了解XCode中各项参数的意义
     就必须深入了解指令的性能因素
+    为了平衡掉误差 每个DrawCall都复制10遍 多次检测耗时
 为了方便测试 这里定制了很多测试用shader和对应的测试环境
 Sample1是简单透明混合 + 采样1次的shader
 Sample2是简单透明混合 + 采样2次后相乘的shader
@@ -105,13 +106,15 @@ Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader
 模型：顶点数-片元数(屏占比)
 贴图：分辨率-过滤模式-mipmap
 
-对比Sample1和Sample2：连续采样1次和采样2次
-
-对比Sample2和Sample2_1：差异化过滤模式 连续PointClamp采样2次
-
-对比Sample2和Sample2_2：差异化mipmap 连续采样2次mip0
-
-对比Sample2和Sample2_3：差异化过滤模式和mipmap
+对比Sample1和Sample2：连续采样1次和连续采样2次
+    连续采样2次的耗时显著增加 但是远没有两倍消耗
+        采样耗时占比从23.6%上升到了28.43%
+对比Sample2和Sample2_1/Sample2_2/Sample2_3：
+    Sample2_1: 差异化过滤模式 连续PointClamp采样2次
+    Sample2_2：差异化mipmap 连续采样2次mip0
+    Sample2_3：差异化过滤模式和mipmap
+    采用Point过滤后有5%性能提升 不明显
+    采用mi
 
 比如Sample2的两次采样耗时93.4微秒 分别占比24.46%和9.04%
     第二次采样耗时明显偏少 耗时构成只有Memory Sample
