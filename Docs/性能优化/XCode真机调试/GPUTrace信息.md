@@ -113,8 +113,8 @@ Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader
     Sample2_1: 差异化过滤模式 连续PointClamp采样2次
     Sample2_2：差异化mipmap 连续采样2次mip0
     Sample2_3：差异化过滤模式和mipmap
-    采用Point过滤后有5%性能提升 不明显
-    采用mi
+    不同shader的耗时数字没有太大参考意义 浮动太大
+
 
 比如Sample2的两次采样耗时93.4微秒 分别占比24.46%和9.04%
     第二次采样耗时明显偏少 耗时构成只有Memory Sample
