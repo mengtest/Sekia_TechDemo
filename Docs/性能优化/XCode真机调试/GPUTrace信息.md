@@ -100,6 +100,19 @@ Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader
     33333 / 400 = 83个
 相同内容的多个DrawCall在同一帧中的耗时偏差上下10%左右 
 
+耗时因素
+显示器：屏幕分辨率
+模型：顶点数-片元数(屏占比)
+贴图：分辨率-过滤模式-mipmap
+
+对比Sample1和Sample2：连续采样1次和采样2次
+
+对比Sample2和Sample2_1：差异化过滤模式 连续PointClamp采样2次
+
+对比Sample2和Sample2_2：差异化mipmap 连续采样2次mip0
+
+对比Sample2和Sample2_3：差异化过滤模式和mipmap
+
 比如Sample2的两次采样耗时93.4微秒 分别占比24.46%和9.04%
     第二次采样耗时明显偏少 耗时构成只有Memory Sample
     第一次采样还有ALU Input Interpolation和ALU Boolean
