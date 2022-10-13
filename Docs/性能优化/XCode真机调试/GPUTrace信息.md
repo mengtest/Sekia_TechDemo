@@ -86,6 +86,7 @@ https://developer.apple.com/videos/play/wwdc2019/606/
 
 # 性能拆解
 如果要通过抓帧评估性能指标 那么就必须详细了解XCode中各项参数的意义
+    就必须深入了解指令的性能因素
 为了方便测试 这里定制了很多测试用shader和对应的测试环境
 Sample1是简单透明混合 + 采样1次的shader
 Sample2是简单透明混合 + 采样2次后相乘的shader
@@ -106,5 +107,7 @@ Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader
         输入差值可能是顶点数据到片元数据的差值
     ALU half：half精度的浮点运算
     Memory Load/Store：Blend操作需要Load和Store
+分析采样行为的性能因素
+    采样默认使用了双线性过滤和mipmap
 
 # 性能积分

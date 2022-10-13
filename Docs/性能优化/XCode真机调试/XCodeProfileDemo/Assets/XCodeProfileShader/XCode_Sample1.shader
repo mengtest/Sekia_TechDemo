@@ -26,7 +26,7 @@ Shader "XCode/Sample1"
 			CBUFFER_START(UnityPerMaterial)
 				float4 _BaseMap_ST;
 			CBUFFER_END
-			TEXTURE2D(_BaseMap); SAMPLER(sampler_PointClamp);
+			TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
 
 			struct a2v
 			{
@@ -53,7 +53,7 @@ Shader "XCode/Sample1"
 			half4 frag ( v2f i  ) : SV_Target
 			{
 				float2 UV_0 = i.uv0.xy;
-				half4 _BaseMapValue = SAMPLE_TEXTURE2D_LOD(_BaseMap, sampler_PointClamp, UV_0, 0.0);
+				half4 _BaseMapValue = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, UV_0);
 				half3 _Color = _BaseMapValue.rgb; 
 				half _Alpha = _BaseMapValue.a;
 				return half4(_Color, _Alpha);
