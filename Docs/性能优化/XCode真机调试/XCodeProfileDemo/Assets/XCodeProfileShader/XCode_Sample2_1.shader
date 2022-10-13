@@ -57,9 +57,10 @@ Shader "XCode/Sample2_1"
 			half4 frag ( v2f i  ) : SV_Target
 			{
 				float2 UV_0 = i.uv0.xy;
-				half4 _BaseMapValue = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, UV_0);
-				_BaseMapValue *= SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, UV_0);
-				_BaseMapValue *= SAMPLE_TEXTURE2D(_BaseMap3, sampler_BaseMap3, UV_0);
+				half4 value1 = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, UV_0);
+				half4 value2 = SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, UV_0);
+				half4 value3 = SAMPLE_TEXTURE2D(_BaseMap3, sampler_BaseMap3, UV_0);
+				half4 _BaseMapValue = value1 * value2 * value3;
 				half3 _Color = _BaseMapValue.rgb; 
 				half _Alpha = _BaseMapValue.a;
 				return half4(_Color, _Alpha);
