@@ -89,11 +89,12 @@ https://developer.apple.com/videos/play/wwdc2019/606/
     就必须深入了解指令的性能因素
     为了平衡掉误差 每个DrawCall都复制10遍 多次检测耗时
 为了方便测试 这里定制了很多测试用shader和对应的测试环境
+Sample0是简单透明混合 + 直接返回颜色的shader
 Sample1是简单透明混合 + 采样1次的shader
 Sample2是简单透明混合 + 采样2次后相乘的shader(并行连续采样)
     Sample2_1和Sample2_2增加并行采样次数
-Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader(串形连续采样)
-    Sample3_1和Sample3_2增加串形采样次数
+Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader(串行连续采样)
+    Sample3_1和Sample3_2增加串行采样次数
 因为都是全屏透明材质 所以OverDraw都是实打实的 片元计算比重非常大
 因为vert计算都一样 光栅化差值的计算理论上是一样的
     假设ALU input Interpolation(frag输入插值)性能积分为100
@@ -104,41 +105,48 @@ Sample3是简单透明混合 + 采样1次作为UV偏移 + 采样1次的shader(�
 如果单个DrawCall耗时400微秒 那么同负载的DrawCall承载上限是
     33333 / 400 = 83个
 相同内容的多个DrawCall在同一帧中的耗时偏差上下10%左右 
+参考：https://developer.apple.com/documentation/metal/optimizing_performance_with_the_shader_profiler
+ALU half/float：浮点运算
+ALU input Interpolation：光栅化插值
+ALU Bloolean：逻辑运算
+Memory Store/Sample/Load：内存访问
+Control flow：逻辑分支
+Synchronization (wait memory)：等待采样/访问buffer
+Synchronization (wait pixel)：frag开始和结束时的等待
+Synchronization (barrier)：compute shader等待组内线程同步
+Synchronization (atomics)：原子锁 没见过GPU上这样处理多线程写入
 
 耗时因素
 显示器：手机屏幕分辨率
 模型：顶点数-片元数(屏占比)
-贴图：分辨率-过滤模式-mipmap-采样用的uv
+GPU：功率上限和稼动率
+贴图：分辨率-过滤模式-mipmap-采样uv
 
-对比Sample1和Sample2：连续采样1次和连续采样2次
+性能分析
     采样UV相同时 Sample1的耗时居然比Sample2高
-        不同shader的耗时数字没有太大参考意义 GPU频率浮动太大
-        相对来说计算任务的占比变化更能反应性能差异
-        求Sample2相比Sample1在MemorySample任务总量提升的百分比
-        (9.2% + x) / (100% + x) = 9.6% / 100% = (960 - 920) / (10000 - 960) = 0.4%
-        求Sample2相比Sample1在ALU Half任务总量提升的百分比
-        (14.68% + x) / (100% + x) = 12.78% / 100% = (1278 - 1468) / (10000 - 1278) = -2.18%
-        求Sample2相比Sample1在ALU Half任务总量提升的百分比
-        (14.68% + x) / (100% + x) = 12.78% / 100% = (1278 - 1468) / (10000 - 1278) = -2.18%
-        求Sample2相比Sample1在Sync Wait Memory任务总量提升的百分比
-        (14.68% + x) / (100% + x) = 12.78% / 100% = (1278 - 1468) / (10000 - 1278) = -2.18%
-        求Sample2相比Sample1在ALU Input Interpolation任务总量提升的百分比
-        (14.68% + x) / (100% + x) = 12.78% / 100% = (1278 - 1468) / (10000 - 1278) = -2.18%
-        求Sample2相比Sample1在Sync Wait Memory任务总量提升的百分比
-        (14.68% + x) / (100% + x) = 12.78% / 100% = (1278 - 1468) / (10000 - 1278) = -2.18%
-        求Sample2相比Sample1在Sync Wait Memory任务总量提升的百分比
-        (14.68% + x) / (100% + x) = 12.78% / 100% = (1278 - 1468) / (10000 - 1278) = -2.18%
+    shader性能积分 = 100 / frag输入差值比例
+        Sample1  积分：100 / 13.84% = 722
+        Sample2  积分：100 / 13.14% = 761
+        Sample2_1积分：100 / 13.08% = 764
+        Sample2_2积分：100 / 9.12%  = 1096
+            每增加一次并行采样少量增加耗时 Sample_2_2有突发性耗时提升
+        Sample3  积分：100 / 8.15% = 1226
+        Sample3_1积分：100 / 6.39% = 1564
+        Sample3_2积分：100 / 5.02% = 1992
+            每增加一次串行采样大量增加耗时 大约增加400性能积分 
+
+fragmentfragment
 
 对比Sample/Sample2和Sample2_1/Sample2_2
     连续并行采样中 延迟被很好的遮盖 增加采样次数带来的耗时增加慢慢变少
 
 对比Sample1和Sample3/Sample3_1/Sample3_2
-    Sample1：串形采样1次 占比28.61%
-    Sample3：串形采样2次 占比41.28
+    Sample1：串行采样1次 占比28.61%
+    Sample3：串行采样2次 占比41.28
         (28.61% + x) / (100% + x) = 41.28% / 100% = (4128 - 2861) / (10000 - 4128) = 21.58%
-    Sample3_1：串形采样3次 占比58.36
+    Sample3_1：串行采样3次 占比58.36
         (28.61% + x) / (100% + x) = 58.36% / 100% = (5836 - 2861) / (10000 - 5836) = 71.45%
-    Sample3_2：串形采样4次 占比67.56
+    Sample3_2：串行采样4次 占比67.56
         (28.61% + x) / (100% + x) = 67.56% / 100% = (6756 - 2861) / (10000 - 6756) = 120.07%
 
 # 性能积分
