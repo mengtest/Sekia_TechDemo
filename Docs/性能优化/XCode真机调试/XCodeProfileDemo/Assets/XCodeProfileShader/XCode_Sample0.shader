@@ -8,7 +8,7 @@ Shader "XCode/Sample0"
 		{
 			Name "Forward"
 			Tags { "LightMode"="UniversalForward" }
-			Blend SrcAlpha OneMinusSrcAlpha
+			//Blend SrcAlpha OneMinusSrcAlpha
 			ColorMask RGB
 			ZWrite Off
 
