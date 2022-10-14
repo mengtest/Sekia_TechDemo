@@ -56,7 +56,7 @@ Shader "XCode/Sample2"
 			{
 				float2 UV_0 = i.uv0.xy;
 				half4 _BaseMapValue = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, UV_0);
-				_BaseMapValue *= SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, UV_0 * 1.01);
+				_BaseMapValue *= SAMPLE_TEXTURE2D(_BaseMap2, sampler_BaseMap2, UV_0 * 10);
 				half3 _Color = _BaseMapValue.rgb; 
 				half _Alpha = _BaseMapValue.a;
 				return half4(_Color, _Alpha);
