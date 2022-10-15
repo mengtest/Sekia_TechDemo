@@ -53,7 +53,8 @@ Shader "XCode/Sample0_2"
 
 			half4 frag ( v2f i  ) : SV_Target
 			{
-				half3 _Color = half3(i.uv0.xyx);
+				half3 intput = half3(i.uv0.xy, 0.0h);
+				half3 _Color = intput;
 				_Color = _Color * _BaseColor.rgb;
 				_Color = _Color * _BaseColor2.rgb;
 				half _Alpha = 0.5h;
