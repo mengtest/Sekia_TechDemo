@@ -55,7 +55,7 @@ Shader "XCode/Sample0_2"
 			{
 				half3 _Color = half3(i.uv0.xyx);
 				_Color = _Color * half3(_BaseColor.rgb);
-				_Color = _Color * _BaseColor2.rgb;
+				_Color = _Color * half3(_BaseColor2.rgb);
 				half _Alpha = 0.5h;
 				return half4(_Color, _Alpha);
 			}
